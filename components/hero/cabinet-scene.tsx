@@ -254,7 +254,7 @@ function useBakedTexture(
 /*  Cabinet                                                            */
 /* ------------------------------------------------------------------ */
 
-function Cabinet() {
+export function Cabinet() {
   const root = useRef<Group>(null)
   const marquee = useRef<Group>(null)
   const panelLeft = useRef<Group>(null)
@@ -711,7 +711,7 @@ const BUTTONS: [number, number, number][] = [
   [0.68, 0.24, 2],
 ]
 
-function Lights() {
+export function Lights() {
   return (
     <>
       <ambientLight intensity={0.3} color="#9aa6dd" />

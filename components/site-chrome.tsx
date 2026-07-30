@@ -1,6 +1,7 @@
 const LINKS = [
   { href: '#then-now', label: 'THEN & NOW' },
   { href: '#why', label: 'WHY REPLAY' },
+  { href: '#slash-compare', label: 'HEAD TO HEAD' },
   { href: '#high-scores', label: 'HIGH SCORES' },
   { href: '#visit', label: 'VISIT' },
 ]
