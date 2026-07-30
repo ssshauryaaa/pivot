@@ -18,12 +18,12 @@ const display = Press_Start_2P({
 })
 
 export const metadata: Metadata = {
-  title: 'REPLAY Arcade — Your High Score Never Expires',
+  title: 'REPLAY',
   description:
     'REPLAY is a real arcade built for the generation that invented arcade culture. Real joysticks, real leaderboards, calibrated sound, step-free floor. First game is free.',
   generator: 'v0.app',
   openGraph: {
-    title: 'REPLAY Arcade — Your High Score Never Expires',
+    title: 'REPLAY',
     description:
       'The original arcade generation, back on the board. Real cabinets, real high scores, in Bay Ridge, Brooklyn.',
     type: 'website',

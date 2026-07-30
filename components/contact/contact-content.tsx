@@ -184,12 +184,7 @@ export function ContactContent() {
 
       {/* ── minimal chrome ── */}
       <header className="relative z-20 flex items-center justify-between px-6 pt-6 sm:px-10">
-        <Link
-          href="/"
-          className="font-display text-[11px] tracking-tight text-primary transition-colors duration-200 hover:text-foreground"
-        >
-          REPLAY
-        </Link>
+        
         <Link
           href="/"
           className="inline-flex min-h-[44px] items-center gap-2 font-display text-[9px] tracking-widest text-muted-foreground transition-colors duration-200 hover:text-primary"
