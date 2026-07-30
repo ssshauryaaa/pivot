@@ -1,9 +1,23 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+
 const LINKS = [
   { href: '#then-now', label: 'THEN & NOW' },
   { href: '#why', label: 'WHY REPLAY' },
   { href: '#slash-compare', label: 'HEAD TO HEAD' },
   { href: '#high-scores', label: 'HIGH SCORES' },
   { href: '#visit', label: 'VISIT' },
+]
+
+const TAGLINES = [
+  'Your High Score Never Expires.',
+  'Muscle Memory Never Retires.',
+  'Free Refills On Fun (And Coffee).',
+  'Bring The Grandkids. Beat Their Score.',
+  'Nostalgia Is Good For The Brain.',
+  'The Joystick Remembers You.',
+  'Retirement Plan: Unlimited Tokens.',
 ]
 
 export function SiteHeader() {
@@ -16,6 +30,7 @@ export function SiteHeader() {
         >
           REPLAY
         </a>
+
         <nav aria-label="Primary">
           <ul className="flex items-center gap-4 sm:gap-5">
             {LINKS.map((link) => (
@@ -28,11 +43,40 @@ export function SiteHeader() {
                 </a>
               </li>
             ))}
-
           </ul>
         </nav>
       </div>
     </header>
+  )
+}
+
+function RotatingTagline() {
+  const [index, setIndex] = useState(0)
+  const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisible(false)
+
+      const timeout = setTimeout(() => {
+        setIndex((i) => (i + 1) % TAGLINES.length)
+        setVisible(true)
+      }, 300)
+
+      return () => clearTimeout(timeout)
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <p
+      className={`mt-3 max-w-sm text-base leading-relaxed text-muted-foreground transition-opacity duration-300 ${
+        visible ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
+      {TAGLINES[index]}
+    </p>
   )
 }
 
@@ -42,10 +86,12 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 sm:flex-row sm:items-end sm:justify-between sm:px-10">
         <div>
           <p className="font-display text-sm text-primary">REPLAY</p>
-          <p className="mt-3 max-w-sm text-base leading-relaxed text-muted-foreground">
-            Your High Score Never Expires. 418 Marquee Street, Bay Ridge, Brooklyn.
+          <RotatingTagline />
+          <p className="mt-2 max-w-sm text-sm text-muted-foreground/70">
+            418 Marquee Street, Bay Ridge, Brooklyn.
           </p>
         </div>
+
         <div className="flex flex-col gap-2 sm:items-end">
           <a
             href="tel:+17185550119"
@@ -53,13 +99,15 @@ export function SiteFooter() {
           >
             (718) 555-0119
           </a>
+
           <a
             href="mailto:tokens@replayarcade.com"
             className="text-base text-foreground/85 transition-colors duration-200 hover:text-primary"
           >
             tokens@replayarcade.com
           </a>
-          <p className="font-display mt-3 text-[9px] tracking-widest text-muted-foreground">
+
+          <p className="mt-3 font-display text-[9px] tracking-widest text-muted-foreground">
             © {new Date().getFullYear()} REPLAY ARCADE
           </p>
         </div>

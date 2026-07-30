@@ -1,12 +1,24 @@
 'use client'
 
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { ContactShadows, Environment, Lightformer, RoundedBox } from '@react-three/drei'
+import { ContactShadows, Environment, Html, Lightformer, RoundedBox } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { CanvasTexture, SRGBColorSpace, type Group, type MeshStandardMaterial } from 'three'
 import { explodeState } from '@/lib/explode-state'
 import { prefersReducedMotion } from '@/lib/gsap-config'
+import {
+  Barrel,
+  Ghost,
+  INVADER,
+  InteractiveVoxel,
+  MARIO,
+  MARIO_PALETTE,
+  PacMan,
+  TETRIS_T,
+  TetrisPiece,
+  UfoSaucer,
+} from '../retro-characters'
 
 const NAVY = '#161c36'
 const CASE = '#1e2547'
@@ -29,7 +41,7 @@ function displayFontFamily() {
 }
 
 // classic 11x8 invader sprite
-const INVADER = [
+const INVADER_BITMAP = [
   '00100000100',
   '00010001000',
   '00111111100',
@@ -96,7 +108,7 @@ function drawCrt(ctx: CanvasRenderingContext2D, w: number, h: number) {
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col < cols; col++) {
       const jitter = row % 2 === 0 ? 6 : -6
-      drawSprite(ctx, INVADER, 36 + jitter + col * (spriteW + gap), 78 + row * 62, px, rowColors[row])
+      drawSprite(ctx, INVADER_BITMAP, 36 + jitter + col * (spriteW + gap), 78 + row * 62, px, rowColors[row])
     }
   }
 
@@ -190,7 +202,7 @@ function drawSideArt(ctx: CanvasRenderingContext2D, w: number, h: number, accent
 
   // big hero invader
   const px = Math.floor(w / 20)
-  drawSprite(ctx, INVADER, (w - 11 * px) / 2, h * 0.16, px, accent)
+  drawSprite(ctx, INVADER_BITMAP, (w - 11 * px) / 2, h * 0.16, px, accent)
 
   // halo glow behind it
   const glow = ctx.createRadialGradient(w / 2, h * 0.26, 10, w / 2, h * 0.26, w * 0.5)
@@ -736,6 +748,160 @@ export function Lights() {
   )
 }
 
+/* ------------------------------------------------------------------ */
+/*  ComboBadge — floating "COMBO ×n" readout that shows up whenever    */
+/*  the crowd has been getting clicked, and fades out on its own.      */
+/* ------------------------------------------------------------------ */
+
+function ComboBadge({ combo }: { combo: number }) {
+  if (combo <= 0) return null
+  return (
+    <Html position={[0, 3.35, 0.6]} center distanceFactor={8} zIndexRange={[20, 0]}>
+      <div
+        style={{
+          fontFamily: 'var(--font-display, monospace)',
+          color: '#ffd977',
+          textShadow: '0 0 10px rgba(255, 217, 119, 0.85)',
+          fontSize: 14,
+          letterSpacing: 1,
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+      >
+        COMBO ×{combo}
+      </div>
+    </Html>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  HeroArcadeCrowd — a bigger cast than the contact scene, orbiting   */
+/*  the hero cabinet. Every character is clickable: each has its own   */
+/*  little reaction, and clicks also build a combo counter that decays */
+/*  after a couple seconds of inactivity.                              */
+/* ------------------------------------------------------------------ */
+
+function HeroArcadeCrowd() {
+  const [combo, setCombo] = useState(0)
+  const resetTimer = useRef<ReturnType<typeof setTimeout>>()
+
+  const bump = () => {
+    setCombo((c) => c + 1)
+    clearTimeout(resetTimer.current)
+    resetTimer.current = setTimeout(() => setCombo(0), 2500)
+  }
+
+  useEffect(() => () => clearTimeout(resetTimer.current), [])
+
+  const pac = useRef<Group>(null)
+  const ghost = useRef<Group>(null)
+  const mario = useRef<Group>(null)
+  const invaderA = useRef<Group>(null)
+  const invaderB = useRef<Group>(null)
+  const ufo = useRef<Group>(null)
+  const barrel = useRef<Group>(null)
+  const tetris = useRef<Group>(null)
+  const reduced = useMemo(() => prefersReducedMotion(), [])
+
+  useFrame(() => {
+    if (reduced) return
+    const t = performance.now() / 1000
+
+    if (pac.current) {
+      pac.current.position.y = -1.85 + Math.sin(t * 1.1) * 0.08
+      pac.current.position.x = -2.85 + Math.sin(t * 0.5) * 0.14
+    }
+    if (ghost.current) {
+      ghost.current.position.y = -1.25 + Math.sin(t * 1.1 + 1.4) * 0.09
+      ghost.current.position.x = -3.15 + Math.sin(t * 0.5) * 0.14
+      ghost.current.rotation.z = Math.sin(t * 1.6) * 0.06
+    }
+    if (mario.current) {
+      const hop = Math.max(0, Math.sin(t * 2.3))
+      mario.current.position.y = -2.05 + hop * hop * 0.2
+      mario.current.rotation.y = -0.4 + Math.sin(t * 0.4) * 0.08
+    }
+    if (invaderA.current) {
+      invaderA.current.position.y = 2.55 + Math.sin(t * 0.9 + 0.6) * 0.1
+      invaderA.current.rotation.z = Math.sin(t * 0.7) * 0.05
+    }
+    if (invaderB.current) {
+      invaderB.current.position.y = 2.85 + Math.sin(t * 0.8 + 2.1) * 0.09
+      invaderB.current.rotation.z = Math.sin(t * 0.6 + 1) * 0.05
+    }
+    if (ufo.current) {
+      ufo.current.position.x = 2.95 + Math.sin(t * 0.4) * 0.25
+      ufo.current.position.y = 3.1 + Math.sin(t * 0.6 + 1) * 0.1
+    }
+    if (barrel.current) {
+      barrel.current.position.y = -2.02 + Math.sin(t * 1.3) * 0.04
+    }
+    if (tetris.current) {
+      tetris.current.position.y = -1.82 + Math.sin(t * 1.0 + 1) * 0.06
+    }
+  })
+
+  return (
+    <group>
+      {/* soft fills so the crowd doesn't render murky beside the cabinet's key lights */}
+      <pointLight position={[-3, -0.5, 2.6]} intensity={4} distance={7} color="#ffe0bb" />
+      <pointLight position={[3, 1.5, 2.6]} intensity={3.2} distance={7} color="#bcd8ff" />
+
+      {/* Pac-Man + a short pellet trail, camera-left at floor level */}
+      <group ref={pac} position={[-2.85, -1.85, 0.6]}>
+        <PacMan rotation={[0, 0.4, 0]} onActivate={bump} />
+      </group>
+      {[-2.4, -2.15, -1.9].map((x, i) => (
+        <mesh key={x} position={[x, -1.85, 0.6]}>
+          <sphereGeometry args={[0.045, 10, 10]} />
+          <meshStandardMaterial
+            color="#ffe9b0"
+            emissive="#ffe9b0"
+            emissiveIntensity={1 - i * 0.2}
+            toneMapped={false}
+          />
+        </mesh>
+      ))}
+
+      {/* Ghost trailing behind */}
+      <group ref={ghost} position={[-3.15, -1.25, 0.3]}>
+        <Ghost onActivate={bump} />
+      </group>
+
+      {/* Mario, camera-right at floor level */}
+      <group ref={mario} position={[2.6, -2.05, 0.65]} rotation={[0, -0.4, 0]}>
+        <InteractiveVoxel rows={MARIO} palette={MARIO_PALETTE} voxel={0.065} onActivate={bump} />
+      </group>
+
+      {/* two invaders drifting overhead */}
+      <group ref={invaderA} position={[2.35, 2.55, -0.25]}>
+        <InteractiveVoxel rows={INVADER} palette={{ '1': AMBER }} voxel={0.05} emissive={0.5} onActivate={bump} />
+      </group>
+      <group ref={invaderB} position={[-2.55, 2.85, -0.5]}>
+        <InteractiveVoxel rows={INVADER} palette={{ '1': MAGENTA }} voxel={0.042} emissive={0.5} onActivate={bump} />
+      </group>
+
+      {/* UFO saucer patrolling up top */}
+      <group ref={ufo} position={[2.95, 3.1, -0.2]}>
+        <UfoSaucer onActivate={bump} />
+      </group>
+
+      {/* Donkey Kong barrel down by the base, camera-left */}
+      <group ref={barrel} position={[-1.55, -2.02, 0.95]}>
+        <Barrel onActivate={bump} />
+      </group>
+
+      {/* Tetris T-piece down by the base, camera-right */}
+      <group ref={tetris} position={[1.65, -1.82, 0.95]}>
+        <TetrisPiece rows={TETRIS_T} color={MAGENTA} onActivate={bump} />
+      </group>
+
+      <ComboBadge combo={combo} />
+    </group>
+  )
+}
+
 export default function CabinetScene() {
   return (
     <Canvas
@@ -760,6 +926,7 @@ export default function CabinetScene() {
         <Lightformer form="rect" intensity={1.2} color="#4d63d8" position={[0, 1, 6]} scale={[7, 3, 1]} />
       </Environment>
       <Cabinet />
+      <HeroArcadeCrowd />
       <ContactShadows position={[0, -2.08, 0]} opacity={0.6} scale={8} blur={2.4} far={3} color="#05070f" />
       <fog attach="fog" args={[NAVY, 9, 18]} />
       <EffectComposer multisampling={0}>

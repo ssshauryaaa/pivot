@@ -182,12 +182,16 @@ export function ContactContent() {
         <div className="grid-backdrop absolute inset-0 opacity-30 [mask-image:linear-gradient(to_bottom,transparent_10%,black_70%)]" />
       </div>
 
-      {/* ── minimal chrome ── */}
-      <header className="relative z-20 flex items-center justify-between px-6 pt-6 sm:px-10">
+      {/* ── minimal chrome ──
+          pt uses env(safe-area-inset-top) below the sm breakpoint so the
+          back link clears notches/dynamic islands on phones held in
+          portrait; sm and up fall back to the fixed 1.5rem since desktop
+          browsers don't report a safe-area inset. */}
+      <header className="relative z-20 flex items-center justify-between px-6 pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-10 sm:pt-6">
         
         <Link
           href="/"
-          className="inline-flex min-h-[44px] items-center gap-2 font-display text-[9px] tracking-widest text-muted-foreground transition-colors duration-200 hover:text-primary"
+          className="inline-flex min-h-[44px] items-center gap-2 font-display text-[10px] tracking-widest text-muted-foreground transition-colors duration-200 hover:text-primary sm:text-[9px]"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
           BACK TO THE FLOOR
@@ -195,14 +199,21 @@ export function ContactContent() {
       </header>
 
       <div className="relative z-10 mx-auto grid max-w-6xl gap-6 px-6 pb-20 pt-6 sm:px-10 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-10 lg:pt-0">
-        {/* ── cabinet stage ── */}
+        {/* ── cabinet stage ──
+            order-2 on mobile so the form (what people actually came for)
+            reads first and the decorative cabinet sits below it, without
+            forcing a big scroll past the visual to reach the fields;
+            lg:order-1 restores the original left-column placement once
+            there's room for both side by side. Height is trimmed on
+            mobile too, since the stage is now a secondary element rather
+            than the page's opening beat. */}
         <div
           ref={stageRef}
           onPointerDown={onStageDown}
           onPointerMove={onStageMove}
           onPointerUp={onStageUp}
           onPointerCancel={onStageUp}
-          className="relative h-[42svh] min-h-[300px] cursor-grab touch-pan-y select-none active:cursor-grabbing lg:h-[calc(100svh-4rem)] lg:min-h-[560px]"
+          className="relative order-2 h-[34svh] min-h-[240px] cursor-grab touch-pan-y select-none active:cursor-grabbing lg:order-1 lg:h-[calc(100svh-4rem)] lg:min-h-[560px]"
           aria-hidden="true"
         >
           {/* Edge-feather mask: the bloom pass brightens the whole canvas a
@@ -228,15 +239,15 @@ export function ContactContent() {
             ) : null}
           </div>
           {tier === 'high' && !prefersReducedMotion() && (
-            <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 font-display text-[8px] tracking-[0.25em] text-muted-foreground/70">
+            <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 font-display text-[9px] tracking-[0.25em] text-muted-foreground/70 sm:text-[8px]">
               DRAG TO SPIN THE CABINET
             </p>
           )}
         </div>
 
         {/* ── form column ── */}
-        <div className="max-w-xl lg:py-16">
-          <p className="font-display text-[10px] tracking-[0.2em] text-primary">CONTACT</p>
+        <div className="order-1 max-w-xl lg:order-2 lg:py-16">
+          <p className="font-display text-[11px] tracking-[0.2em] text-primary sm:text-[10px]">CONTACT</p>
           <h1 className="font-display mt-4 text-2xl text-balance leading-snug text-foreground text-glow-amber sm:text-3xl">
             Say hi. We&apos;re at the counter.
           </h1>
@@ -272,7 +283,7 @@ export function ContactContent() {
           ) : (
             <form className="mt-10" onSubmit={onSubmit} noValidate aria-label="Contact REPLAY">
               <label className="block">
-                <span className="font-display text-[10px] tracking-[0.2em] text-primary/80">
+                <span className="font-display text-[11px] tracking-[0.2em] text-primary/80 sm:text-[10px]">
                   EMAIL
                 </span>
                 <input
@@ -299,7 +310,7 @@ export function ContactContent() {
               </label>
 
               <label className="mt-7 block">
-                <span className="font-display text-[10px] tracking-[0.2em] text-primary/80">
+                <span className="font-display text-[11px] tracking-[0.2em] text-primary/80 sm:text-[10px]">
                   MESSAGE
                 </span>
                 <textarea

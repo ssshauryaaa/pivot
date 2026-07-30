@@ -17,23 +17,32 @@ gsap.registerPlugin(ScrollTrigger)
 const CabinetScene = dynamic(() => import('@/components/hero/cabinet-scene'), { ssr: false })
 
 const CALLOUTS = [
-  { id: 'marquee', part: 'MARQUEE', text: 'Your name up in lights. Again.' },
-  { id: 'screen', part: 'CRT', text: 'Same reflexes. New respect.' },
-  { id: 'joystick', part: 'CONTROLS', text: 'Real buttons. Real feel.' },
-  { id: 'coin', part: 'COIN DOOR', text: 'Muscle memory never left.' },
+  { id: 'marquee', part: 'MARQUEE', text: 'Your name in lights again. High score, your rules.' },
+  { id: 'screen', part: 'CRT', text: 'The game hasn\'t changed. Neither have your reflexes.' },
+  { id: 'joystick', part: 'CONTROLS', text: 'Your hands already know this. Some things you never forget.' },
+  { id: 'coin', part: 'COIN DOOR', text: 'One quarter. Every memory it ever bought.' },
+]
+
+const HEADLINES = [
+  { line1: 'Your High Score', line2: 'Never Expires.' },
+  { line1: 'Your Reflexes', line2: 'Never Retired.' },
+  { line1: 'The High Score', line2: 'Remembers Your Name.' },
+  { line1: 'Muscle Memory', line2: 'Never Left The Building.' },
+  { line1: 'Your Best Run', line2: 'Is Still Ahead Of You.' },
 ]
 
 export function HeroExplode() {
   const [tier, setTier] = useState<DeviceTier | null>(null)
   const [reduced, setReduced] = useState(false)
+  const [headlineIndex, setHeadlineIndex] = useState(0)
   const sectionRef = useRef<HTMLDivElement>(null)
+  const headlineRef = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
     setReduced(prefersReducedMotion())
     setTier(detectDeviceTier())
   }, [])
 
-  // Intro reveal once the preloader has wiped away.
   useEffect(() => {
     if (tier === null) return
     const play = () => {
@@ -51,7 +60,34 @@ export function HeroExplode() {
     return () => window.removeEventListener('replay:ready', play)
   }, [tier])
 
-  // The one pinned + scrubbed timeline. Scroll up and it reverses.
+  useEffect(() => {
+    if (reduced) return
+
+    const interval = setInterval(() => {
+      if (!headlineRef.current) return
+      gsap.to(headlineRef.current, {
+        opacity: 0,
+        y: -10,
+        duration: 0.4,
+        ease: EASE,
+        onComplete: () => {
+          setHeadlineIndex((i) => (i + 1) % HEADLINES.length)
+        },
+      })
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [reduced])
+
+  useEffect(() => {
+    if (reduced || !headlineRef.current) return
+    gsap.fromTo(
+      headlineRef.current,
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.4, ease: EASE },
+    )
+  }, [headlineIndex, reduced])
+
   useEffect(() => {
     if (tier === null) return
     if (prefersReducedMotion()) {
@@ -69,27 +105,17 @@ export function HeroExplode() {
           scrub: 1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          // the pin inserts ~2000px of spacer, so it must be measured before
-          // every downstream section reveal or their starts land too early
           refreshPriority: 1,
         },
       })
 
       if (tier === 'high') {
-        // WebGL path: a staged disassembly — each part detaches in sequence
-        // (marquee lifts, panels swing, screen floats out, deck drops) instead
-        // of everything sliding at once. The spin runs underneath the whole beat.
         tl.to(explodeState, { spin: 0.2, ease: 'none', duration: 2.4 }, 0)
-          // 1. marquee lifts off and tilts back
           .to(explodeState, { marqueeY: 0.75, marqueeRotX: 0.34, ease: EASE, duration: 0.7 }, 0.1)
-          // 2. side panels swing open like doors
           .to(explodeState, { panelX: 1.25, panelRotY: 1.05, ease: EASE, duration: 0.8 }, 0.45)
-          // 3. screen floats toward the camera and brightens
           .to(explodeState, { screenZ: 1.45, screenGlow: 1.7, ease: EASE, duration: 0.8 }, 0.85)
-          // 4. control deck detaches downward and forward
           .to(explodeState, { controlsY: -0.85, controlsOpacity: 0.9, ease: EASE, duration: 0.7 }, 1.2)
       } else {
-        // CSS-3D path: identical staged choreography on DOM layers.
         tl.to('.marquee', { y: -140, rotateX: 18, ease: EASE, duration: 0.7 }, 0.1)
           .to('.side-panel-left', { x: -170, rotateY: -24, ease: EASE, duration: 0.8 }, 0.45)
           .to('.side-panel-right', { x: 170, rotateY: 24, ease: EASE, duration: 0.8 }, 0.45)
@@ -104,7 +130,6 @@ export function HeroExplode() {
       tl.to('[data-hero-copy]', { opacity: 0, y: -40, ease: EASE, duration: 0.6 }, 0)
         .to('[data-hero-sprites]', { opacity: 0, y: -60, ease: EASE, duration: 0.5 }, 0)
         .to('[data-scroll-cue]', { opacity: 0, ease: EASE, duration: 0.3 }, 0)
-        // callouts type on one-by-one, each synced near its matching part's beat
         .from(
           '.callout-label',
           { opacity: 0, x: -36, filter: 'blur(6px)', stagger: 0.32, ease: 'power3.out', duration: 0.55 },
@@ -133,7 +158,6 @@ export function HeroExplode() {
       >
         <CrtBackdrop />
 
-        {/* cabinet stage */}
         <div className="pointer-events-none absolute inset-0 lg:left-[26%]">
           {tier === 'high' ? <CabinetScene /> : tier === 'low' ? <CabinetCss /> : null}
         </div>
@@ -145,7 +169,6 @@ export function HeroExplode() {
           <PixelSprites />
         </div>
 
-        {/* copy */}
         <div className="relative z-10 flex flex-1 items-end px-6 pb-24 sm:px-10 lg:items-center lg:pb-0">
           <div data-hero-copy className="will-animate max-w-xl">
             <p
@@ -156,34 +179,35 @@ export function HeroExplode() {
             </p>
             <h1
               data-hero-reveal
-              className="font-display mt-5 text-3xl text-balance text-foreground text-glow-amber sm:text-4xl lg:text-5xl"
+              ref={headlineRef}
+              className="font-display mt-5 min-h-[4.5rem] text-3xl text-balance text-foreground text-glow-amber sm:min-h-[3.5rem] sm:text-4xl lg:min-h-[4rem] lg:text-5xl"
             >
-              Your High Score<br />
-              <span className="text-primary">Never Expires.</span>
+              {HEADLINES[headlineIndex].line1}
+              <br />
+              <span className="text-primary">{HEADLINES[headlineIndex].line2}</span>
             </h1>
             <p data-hero-reveal className="mt-6 max-w-md text-pretty leading-relaxed text-muted-foreground">
               You didn&apos;t discover arcades. You built them — quarter by quarter, Friday by Friday.
               REPLAY is the room you left, wired for the people who never actually stopped playing.
             </p>
             <div data-hero-reveal className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href="#visit"
-                className="group inline-flex items-center gap-2 bg-primary px-6 py-3 font-display text-[11px] tracking-wide text-primary-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(255,182,39,0.35)] sm:text-xs"
-              >
-                CLAIM YOUR TOKENS
-              </a>
-              <a
-                href="#high-scores"
-                className="inline-flex items-center gap-2 border border-primary/45 px-6 py-3 font-display text-[11px] tracking-wide text-primary transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 sm:text-xs"
-              >
-                SEE THE BOARD
-              </a>
-            </div>
+  <a
+    href="#visit"
+    className="group inline-flex items-center gap-2 bg-primary px-6 py-3 font-display text-[11px] tracking-wide text-primary-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(255,182,39,0.35)] sm:text-xs"
+  >
+    CLAIM YOUR TOKENS
+  </a>
+
+  <a
+    href="#high-scores"
+    className="inline-flex items-center gap-2 border border-primary/45 px-6 py-3 font-display text-[11px] tracking-wide text-primary transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 sm:text-xs"
+  >
+    SEE THE BOARD
+  </a>
+</div>
           </div>
         </div>
 
-        {/* exploded-part callouts — kept in the empty left column so they never
-            land on top of the cabinet itself */}
         <ul className="pointer-events-none absolute bottom-24 left-6 z-10 flex flex-col gap-6 sm:left-10 lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2 lg:gap-8">
           {CALLOUTS.map((callout, i) => (
             <li key={callout.id} className="callout-label will-animate max-w-[22rem]">
