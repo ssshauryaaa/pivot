@@ -1,0 +1,289 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@theme inline {
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), ui-monospace, monospace;
+  --font-mono: var(--font-display), ui-monospace, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-void: var(--void);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  color-scheme: dark;
+
+  /* deep arcade-cabinet navy */
+  --background: #12172b;
+  /* off-white body text */
+  --foreground: #f4efe6;
+  /* near-black depth layer */
+  --void: #0a0d1a;
+
+  --card: #191f38;
+  --card-foreground: #f4efe6;
+  --popover: #191f38;
+  --popover-foreground: #f4efe6;
+
+  /* warm CRT amber — the single interactive accent */
+  --primary: #ffb627;
+  --primary-foreground: #0a0d1a;
+
+  --secondary: #1e2544;
+  --secondary-foreground: #f4efe6;
+
+  --muted: #1e2544;
+  --muted-foreground: #a9b0cc;
+
+  /* hot magenta — rare emphasis only */
+  --accent: #ff3e9a;
+  --accent-foreground: #0a0d1a;
+
+  --destructive: #ff3e9a;
+  --border: color-mix(in oklab, #f4efe6 14%, transparent);
+  --input: color-mix(in oklab, #f4efe6 18%, transparent);
+  --ring: #ffb627;
+  --radius: 0.25rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  /* Hide scrollbars (vertical & horizontal) */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+  *::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Edge */
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    /* senior-friendly base size: legibility as a design feature */
+    font-size: 19px;
+    line-height: 1.6;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 20px;
+    }
+  }
+
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .text-glow-amber {
+    text-shadow: 0 0 18px color-mix(in oklab, var(--primary) 55%, transparent);
+  }
+
+  .will-animate {
+    will-change: transform, opacity;
+  }
+
+  /* CRT scanlines */
+  .scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--void) 42%, transparent) 0px,
+      color-mix(in oklab, var(--void) 42%, transparent) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: multiply;
+  }
+
+  .grid-backdrop {
+    background-image: linear-gradient(
+        to right,
+        color-mix(in oklab, var(--primary) 8%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, color-mix(in oklab, var(--primary) 8%, transparent) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .pixelated {
+    image-rendering: pixelated;
+  }
+
+  /* ---- 3D tilt cards (Then & Now) ---- */
+  .tilt-stage {
+    perspective: 1200px;
+  }
+
+  .tilt-card {
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(0);
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease;
+    will-change: transform;
+  }
+
+  .tilt-card.is-tilting {
+    transition: transform 0.08s linear, box-shadow 0.5s ease;
+  }
+
+  .tilt-layer {
+    transform: translateZ(var(--tz, 0px));
+    transform-style: preserve-3d;
+  }
+
+  /* cursor-tracked glare sheen */
+  .tilt-glare {
+    background: radial-gradient(
+      420px circle at var(--gx, 50%) var(--gy, 50%),
+      color-mix(in oklab, var(--foreground) 9%, transparent),
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .tilt-card:hover .tilt-glare {
+    opacity: 1;
+  }
+
+  /* animated conic border that spins on hover */
+  .neon-frame {
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: conic-gradient(
+      from var(--frame-angle, 0deg),
+      transparent 0%,
+      color-mix(in oklab, var(--primary) 70%, transparent) 12%,
+      transparent 26%,
+      transparent 55%,
+      color-mix(in oklab, var(--primary) 35%, transparent) 68%,
+      transparent 82%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .tilt-card:hover .neon-frame {
+    opacity: 1;
+    animation: frame-spin 3.2s linear infinite;
+  }
+}
+
+@property --frame-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes frame-spin {
+  to {
+    --frame-angle: 360deg;
+  }
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 0.92;
+  }
+  50% {
+    opacity: 0.72;
+  }
+  52% {
+    opacity: 0.95;
+  }
+}
+
+.animate-flicker {
+  animation: flicker 3.2s steps(12, end) infinite;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes sprite-bob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+.animate-sprite-bob {
+  animation: sprite-bob 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
