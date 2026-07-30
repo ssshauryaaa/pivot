@@ -11,7 +11,7 @@ import {
   useMotionValueEvent,
   type MotionValue,
 } from 'framer-motion'
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 
 // How many cards to keep mounted on either side of the current scroll
 // position. Cards outside this window are unmounted entirely — with 30+
@@ -89,9 +89,23 @@ export function CabinetSurfer({ games = GAMES, variant = 'magnetic', vhPerItem =
     offset: ['start start', 'end end'],
   })
 
-  const stepX = 260
-  const stepY = -70
-  const stepZ = -260
+  const [viewportWidth, setViewportWidth] = useState(() => (typeof window !== 'undefined' ? window.innerWidth : 1280))
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const isMobile = viewportWidth < 640
+  const isTablet = viewportWidth < 1024
+
+  const cardWidth = isMobile ? 190 : isTablet ? 220 : 260
+  const cardHeight = isMobile ? 280 : isTablet ? 300 : 340
+  const stepX = isMobile ? 160 : isTablet ? 220 : 260
+  const stepY = isMobile ? -50 : -70
+  const stepZ = isMobile ? -180 : -260
 
   const x = useTransform(scrollYProgress, [0, 1], [0, -(games.length - 1) * stepX])
   const y = useTransform(scrollYProgress, [0, 1], [0, -(games.length - 1) * stepY])
@@ -151,33 +165,35 @@ export function CabinetSurfer({ games = GAMES, variant = 'magnetic', vhPerItem =
   return (
     // This element's HEIGHT is the only scroll distance the surfer consumes —
     // once you scroll past it, the page continues normally into whatever comes next.
-    <div ref={container} className="relative w-full" style={{ height: `${games.length * vhPerItem * 100}vh` }}>
+    <div ref={container} className="relative w-full" style={{ height: `${Math.max(100, games.length * vhPerItem * 100)}vh` }}>
       <div
-        className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden"
+        className="sticky top-0 flex h-[100svh] w-full items-center justify-center overflow-hidden sm:h-screen"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
         <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_15%,#1b2242_0%,#12172b_45%,#0a0d1a_100%)]" />
         <div className="grid-backdrop absolute -inset-24 opacity-30" aria-hidden="true" />
 
-        <div className="pointer-events-none absolute left-[4vw] top-[5vw] z-50">
-          <p className="font-display text-xs tracking-[0.22em] text-primary">the lineup</p>
-          <h1 className="font-display mt-2 text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[0.95] tracking-tight text-foreground">
-            Every cabinet,
-            <br />
-            ready when you are
-          </h1>
+        <div className="absolute inset-x-0 top-0 z-50 flex flex-col gap-4 px-[4vw] pt-[4vw] sm:flex-row sm:items-start sm:justify-between">
+          <div className="pointer-events-none max-w-[min(90vw,34rem)]">
+            <p className="font-display text-xs tracking-[0.22em] text-primary">the lineup</p>
+            <h1 className="font-display mt-2 text-[clamp(1.7rem,6vw,3.5rem)] font-bold leading-[0.95] tracking-tight text-foreground">
+              Every cabinet,
+              <br />
+              ready when you are
+            </h1>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleSkip}
+            className="w-fit rounded-full border border-primary/40 bg-background/80 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground backdrop-blur transition hover:border-primary hover:bg-background"
+          >
+            skip
+          </button>
         </div>
 
-        <button
-          type="button"
-          onClick={handleSkip}
-          className="absolute right-[4vw] top-[4vw] z-50 rounded-full border border-primary/40 bg-background/80 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground backdrop-blur transition hover:border-primary hover:bg-background"
-        >
-          skip
-        </button>
-
-        <p className="font-display absolute bottom-[4vw] right-[4vw] z-50 text-[10px] tracking-[0.2em] text-foreground/50">
+        <p className="font-display absolute bottom-[4vw] left-[4vw] z-50 text-[10px] tracking-[0.2em] text-foreground/50 sm:right-[4vw] sm:left-auto">
           scroll to surf
         </p>
 
@@ -202,6 +218,8 @@ export function CabinetSurfer({ games = GAMES, variant = 'magnetic', vhPerItem =
                   mouseX={mouseX}
                   mouseY={mouseY}
                   variant={variant}
+                  cardWidth={cardWidth}
+                  cardHeight={cardHeight}
                 />
               )
             })}
@@ -223,6 +241,8 @@ function SurferCard({
   mouseX,
   mouseY,
   variant,
+  cardWidth,
+  cardHeight,
 }: {
   game: CabinetGame
   i: number
@@ -232,6 +252,8 @@ function SurferCard({
   mouseX: MotionValue<number>
   mouseY: MotionValue<number>
   variant: CabinetSurferVariant
+  cardWidth: number
+  cardHeight: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -264,8 +286,10 @@ function SurferCard({
   return (
     <motion.div
       ref={ref}
-      className="tilt-card group absolute h-[340px] w-[260px] overflow-hidden rounded-[var(--radius-lg)]"
+      className="tilt-card group absolute overflow-hidden rounded-[var(--radius-lg)]"
       style={{
+        width: `${cardWidth}px`,
+        height: `${cardHeight}px`,
         transform,
         transformStyle: 'preserve-3d',
         willChange: 'transform',
@@ -283,8 +307,11 @@ function SurferCard({
       </div>
 
       <div
-        className="relative flex h-[190px] items-center justify-center overflow-hidden"
-        style={{ background: 'radial-gradient(120% 140% at 50% 0%, #173a3a 0%, #0e2624 65%, #0a0d1a 100%)' }}
+        className="relative flex items-center justify-center overflow-hidden"
+        style={{
+          height: `${Math.round(cardHeight * 0.56)}px`,
+          background: 'radial-gradient(120% 140% at 50% 0%, #173a3a 0%, #0e2624 65%, #0a0d1a 100%)',
+        }}
       >
         {game.image ? (
           <>

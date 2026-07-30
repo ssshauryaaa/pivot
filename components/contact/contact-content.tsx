@@ -16,11 +16,17 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 type Status = 'idle' | 'sending' | 'sent'
 
+interface ContactFormErrorState {
+  email?: string
+  message?: string
+  submit?: string
+}
+
 export function ContactContent() {
   const [tier, setTier] = useState<DeviceTier | null>(null)
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
-  const [errors, setErrors] = useState<{ email?: string; message?: string }>({})
+  const [errors, setErrors] = useState<ContactFormErrorState>({})
   const [status, setStatus] = useState<Status>('idle')
 
   const stageRef = useRef<HTMLDivElement>(null)
@@ -106,9 +112,9 @@ export function ContactContent() {
   /* ── submit ─────────────────────────────────────────────────────── */
 
   const onSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-      const next: { email?: string; message?: string } = {}
+      const next: ContactFormErrorState = {}
       if (!EMAIL_RE.test(email.trim())) next.email = 'That email doesn’t look right — check it and try again.'
       if (message.trim().length < 2) next.message = 'Give us at least a couple of words.'
       setErrors(next)
@@ -116,41 +122,56 @@ export function ContactContent() {
 
       setStatus('sending')
 
-      const finish = () => setStatus('sent')
-
-      if (canAnimate()) {
-        // Celebration: the cabinet blows apart, spins once, reassembles.
-        const tl = gsap.timeline({ onComplete: finish })
-        tl.to(explodeState, {
-          marqueeY: 0.6,
-          marqueeRotX: 0.28,
-          panelX: 1,
-          panelRotY: 0.85,
-          screenZ: 1.1,
-          screenGlow: 1.9,
-          controlsY: -0.65,
-          duration: 0.65,
-          ease: 'power3.out',
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim(), message: message.trim() }),
         })
-          .to(explodeState, { spin: Math.PI * 2, duration: 1.5, ease: 'power2.inOut' }, 0.15)
-          .to(
-            explodeState,
-            {
-              marqueeY: 0,
-              marqueeRotX: 0,
-              panelX: 0,
-              panelRotY: 0,
-              screenZ: 0,
-              screenGlow: 1,
-              controlsY: 0,
-              spin: 0,
-              duration: 0.85,
-              ease: 'power3.inOut',
-            },
-            '+=0.3',
-          )
-      } else {
-        setTimeout(finish, 600)
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Unable to send the message right now.')
+        }
+
+        if (canAnimate()) {
+          // Celebration: the cabinet blows apart, spins once, reassembles.
+          const tl = gsap.timeline({ onComplete: () => setStatus('sent') })
+          tl.to(explodeState, {
+            marqueeY: 0.6,
+            marqueeRotX: 0.28,
+            panelX: 1,
+            panelRotY: 0.85,
+            screenZ: 1.1,
+            screenGlow: 1.9,
+            controlsY: -0.65,
+            duration: 0.65,
+            ease: 'power3.out',
+          })
+            .to(explodeState, { spin: Math.PI * 2, duration: 1.5, ease: 'power2.inOut' }, 0.15)
+            .to(
+              explodeState,
+              {
+                marqueeY: 0,
+                marqueeRotX: 0,
+                panelX: 0,
+                panelRotY: 0,
+                screenZ: 0,
+                screenGlow: 1,
+                controlsY: 0,
+                spin: 0,
+                duration: 0.85,
+                ease: 'power3.inOut',
+              },
+              '+=0.3',
+            )
+        } else {
+          setStatus('sent')
+        }
+      } catch (error) {
+        setStatus('idle')
+        setErrors({ submit: error instanceof Error ? error.message : 'Unable to send the message right now.' })
       }
     },
     [email, message, canAnimate],
@@ -265,9 +286,9 @@ export function ContactContent() {
               <p className="font-display animate-flicker text-sm tracking-[0.2em] text-primary">
                 MESSAGE SENT
               </p>
-              <p className="font-display mt-4 text-[10px] tracking-[0.25em] text-accent">
+              {/* <p className="font-display mt-4 text-[10px] tracking-[0.25em] text-accent">
                 +1000 PTS
-              </p>
+              </p> */}
               <p className="mt-5 leading-relaxed text-muted-foreground">
                 We read everything at the counter between games. Expect a reply within a day
                 or two.
@@ -342,6 +363,12 @@ export function ContactContent() {
               >
                 {status === 'sending' ? 'INSERTING COIN…' : 'INSERT COIN TO SEND'}
               </button>
+
+              {errors.submit && (
+                <p role="alert" className="mt-4 text-base text-accent">
+                  {errors.submit}
+                </p>
+              )}
 
               <div className="mt-8 flex items-start gap-3 border-t border-white/10 pt-6">
                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary/70" aria-hidden="true" />

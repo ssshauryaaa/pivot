@@ -153,7 +153,7 @@ export function HeroExplode() {
   return (
     <div ref={sectionRef}>
       <section
-        className="hero-explode relative flex h-svh min-h-[620px] flex-col overflow-hidden"
+        className="hero-explode relative flex min-h-155 flex-col overflow-hidden sm:min-h-190 lg:h-svh"
         aria-label="REPLAY — your high score never expires"
       >
         <CrtBackdrop />
@@ -164,13 +164,13 @@ export function HeroExplode() {
 
         <div
           data-hero-sprites
-          className="will-animate pointer-events-none absolute left-1/2 top-[13%] -translate-x-1/2 lg:left-[63%] lg:top-[10%]"
+          className="will-animate pointer-events-none absolute left-1/2 top-[8%] -translate-x-1/2 scale-[0.7] sm:top-[10%] sm:scale-[0.85] lg:left-[63%] lg:top-[10%] lg:scale-100"
         >
           <PixelSprites />
         </div>
 
-        <div className="relative z-10 flex flex-1 items-end px-6 pb-24 sm:px-10 lg:items-center lg:pb-0">
-          <div data-hero-copy className="will-animate max-w-xl">
+        <div className="relative z-10 flex flex-1 items-end px-4 pb-24 pt-24 sm:px-8 sm:pb-28 sm:pt-28 lg:items-center lg:px-10 lg:pb-0 lg:pt-0">
+          <div data-hero-copy className="will-animate w-full max-w-full sm:max-w-xl">
             <p
               data-hero-reveal
               className="font-display text-[10px] tracking-[0.2em] text-primary sm:text-xs"
@@ -180,46 +180,46 @@ export function HeroExplode() {
             <h1
               data-hero-reveal
               ref={headlineRef}
-              className="font-display mt-5 min-h-[4.5rem] text-3xl text-balance text-foreground text-glow-amber sm:min-h-[3.5rem] sm:text-4xl lg:min-h-[4rem] lg:text-5xl"
+              className="font-display mt-5 min-h-18 text-[clamp(2rem,6vw,3.5rem)] leading-[0.95] text-balance text-foreground text-glow-amber sm:min-h-14 lg:min-h-16 lg:text-[clamp(2.75rem,4.4vw,4.8rem)]"
             >
               {HEADLINES[headlineIndex].line1}
               <br />
               <span className="text-primary">{HEADLINES[headlineIndex].line2}</span>
             </h1>
-            <p data-hero-reveal className="mt-6 max-w-md text-pretty leading-relaxed text-muted-foreground">
+            <p data-hero-reveal className="mt-6 max-w-full text-pretty leading-relaxed text-muted-foreground sm:max-w-md">
               You didn&apos;t discover arcades. You built them — quarter by quarter, Friday by Friday.
               REPLAY is the room you left, wired for the people who never actually stopped playing.
             </p>
-            <div data-hero-reveal className="mt-8 flex flex-wrap items-center gap-4">
+            <div data-hero-reveal className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
   <a
     href="#visit"
-    className="group inline-flex items-center gap-2 bg-primary px-6 py-3 font-display text-[11px] tracking-wide text-primary-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(255,182,39,0.35)] sm:text-xs"
+    className="group inline-flex items-center justify-center gap-2 bg-primary px-6 py-3 font-display text-[11px] tracking-wide text-primary-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(255,182,39,0.35)] sm:justify-start sm:text-xs"
   >
     CLAIM YOUR TOKENS
   </a>
 
   <a
-    href="#high-scores"
-    className="inline-flex items-center gap-2 border border-primary/45 px-6 py-3 font-display text-[11px] tracking-wide text-primary transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 sm:text-xs"
+    href="/contact"
+    className="inline-flex items-center justify-center gap-2 border border-primary/45 px-6 py-3 font-display text-[11px] tracking-wide text-primary transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 sm:justify-start sm:text-xs"
   >
-    SEE THE BOARD
+    CONTACT US
   </a>
 </div>
           </div>
         </div>
 
-        <ul className="pointer-events-none absolute bottom-24 left-6 z-10 flex flex-col gap-6 sm:left-10 lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2 lg:gap-8">
+        <ul className="pointer-events-none absolute bottom-24 left-4 right-4 z-10 flex flex-col gap-4 sm:left-8 sm:right-8 sm:gap-5 lg:bottom-auto lg:top-1/2 lg:left-6 lg:right-auto lg:-translate-y-1/2 lg:gap-8">
           {CALLOUTS.map((callout, i) => (
-            <li key={callout.id} className="callout-label will-animate max-w-[22rem]">
+            <li key={callout.id} className="callout-label will-animate max-w-full sm:max-w-88 lg:max-w-88">
               <div className="flex items-baseline gap-3">
                 <span className="font-display text-[10px] tracking-[0.2em] text-accent/70">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <span className="font-display text-[11px] tracking-[0.22em] text-accent sm:text-xs">
+                <span className="font-display text-[10px] tracking-[0.22em] text-accent sm:text-xs">
                   {callout.part}
                 </span>
               </div>
-              <span className="callout-rule mt-2 block h-px w-full bg-gradient-to-r from-accent/80 via-accent/30 to-transparent" />
+              <span className="callout-rule mt-2 block h-px w-full bg-linear-to-r from-accent/80 via-accent/30 to-transparent" />
               <span className="font-display mt-3 block text-sm leading-relaxed text-primary text-glow-amber sm:text-base lg:text-lg">
                 {callout.text}
               </span>
@@ -228,7 +228,7 @@ export function HeroExplode() {
         </ul>
 
         {!reduced && (
-          <div data-scroll-cue className="absolute bottom-14 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-muted-foreground lg:left-auto lg:right-8 lg:translate-x-0">
+          <div data-scroll-cue className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-muted-foreground sm:bottom-10 lg:left-auto lg:right-8 lg:translate-x-0">
             <span className="font-display text-[9px] tracking-widest">SCROLL TO OPEN THE CABINET</span>
             <ArrowDown className="h-4 w-4 animate-bounce text-primary" aria-hidden="true" />
           </div>
