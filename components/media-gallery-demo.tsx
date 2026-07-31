@@ -4,16 +4,23 @@ import { MediaGalleryCarousel, type GalleryMediaItem } from './ui/media-gallery-
 
 const CAMPAIGN_MEDIA: GalleryMediaItem[] = [
   {
-    src: '/gallery/replay-poster-01.jpg',
+    src: '/p2 (1).jpeg',
     alt: 'REPLAY arcade launch poster featuring a glowing joystick',
     title: 'Launch Poster',
     category: 'POSTER',
-    href: '/gallery/replay-poster-01.jpg',
+    href: '/p2 (1).jpeg',
+  },
+  {
+    src: '/p2 (2).jpeg',
+    alt: 'REPLAY arcade launch poster featuring a glowing joystick',
+    title: 'Launch Poster',
+    category: 'POSTER',
+    href: '/p2 (2).jpeg',
   },
   {
     src: '/Level up.png',
     alt: 'Arcade x Senior Citizens print advertisement, childhood games to arcade split visual',
-    title: '"Level Up" Print Ad',
+    title: '"Level Up" Print Poster',
     category: 'AD',
     href: '/Level up.png',
 },
@@ -24,12 +31,6 @@ const CAMPAIGN_MEDIA: GalleryMediaItem[] = [
     category: 'REEL',
     href: '/gallery/replay-reel-01.mp4',
     ctaLabel: 'WATCH REEL',
-  },
-  {
-    src: '/gallery/replay-mockup-01.jpg',
-    alt: 'Storefront mockup of the REPLAY arcade entrance',
-    title: 'Storefront Mockup',
-    category: 'MOCKUP',
   },
 ]
 

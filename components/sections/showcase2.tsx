@@ -156,8 +156,13 @@ export function CabinetSurfer({ games = GAMES, variant = 'magnetic', vhPerItem =
   const handleSkip = useCallback((direction: 'up' | 'down') => {
     if (!container.current) return
 
-    const scrollAmount = direction === 'down' ? container.current.offsetHeight : -container.current.offsetHeight
-    window.scrollBy({ top: scrollAmount, behavior: 'smooth' })
+    const containerTop = container.current.offsetTop
+    const containerBottom = containerTop + container.current.offsetHeight
+
+    window.scrollTo({
+      top: direction === 'down' ? containerBottom : containerTop,
+      behavior: 'smooth',
+    })
   }, [])
 
   if (reduceMotion) {
