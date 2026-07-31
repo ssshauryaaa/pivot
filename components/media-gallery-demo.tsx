@@ -4,13 +4,6 @@ import { MediaGalleryCarousel, type GalleryMediaItem } from './ui/media-gallery-
 
 const CAMPAIGN_MEDIA: GalleryMediaItem[] = [
   {
-    src: '/p2 (1).jpeg',
-    alt: 'REPLAY arcade launch poster featuring a glowing joystick',
-    title: 'Launch Poster',
-    category: 'POSTER',
-    href: '/p2 (1).jpeg',
-  },
-  {
     src: '/p2 (2).jpeg',
     alt: 'REPLAY arcade launch poster featuring a glowing joystick',
     title: 'Launch Poster',
@@ -23,6 +16,20 @@ const CAMPAIGN_MEDIA: GalleryMediaItem[] = [
     title: '"Level Up" Print Poster',
     category: 'AD',
     href: '/Level up.png',
+},
+{
+    src: '/p2 (1).jpeg',
+    alt: 'REPLAY arcade launch poster featuring a glowing joystick',
+    title: 'Launch Poster',
+    category: 'POSTER',
+    href: '/p2 (1).jpeg',
+  },
+  {
+    src: '/PLAYER 1.png',
+    alt: 'Arcade x Senior Citizens print advertisement, childhood games to arcade split visual',
+    title: '"PLAYER 1" Poster',
+    category: 'AD',
+    href: '/PLAYER 1.png',
 },
   {
     src: '/gallery/replay-reel-01.jpg',
