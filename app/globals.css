@@ -274,8 +274,25 @@
   }
 }
 
+@keyframes jump {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-6px);
+  }
+}
+
 .animate-sprite-bob {
   animation: sprite-bob 2.4s ease-in-out infinite;
+}
+
+.animate-jump {
+  animation: jump 1.8s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
