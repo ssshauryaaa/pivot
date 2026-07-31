@@ -18,7 +18,7 @@ const display = Press_Start_2P({
 })
 
 export const metadata: Metadata = {
-  title: 'REPLAY',
+  title: 'Replay',
   description:
     'REPLAY is a real arcade built for the generation that invented arcade culture. Real joysticks, real leaderboards, calibrated sound, step-free floor. First game is free.',
   generator: 'v0.app',
@@ -29,15 +29,12 @@ export const metadata: Metadata = {
     type: 'website',
   },
   icons: {
-    icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-    ],
-    apple: '/apple-icon.png',
+    // Primary tab icon (favicon)
+    icon: '/logoig-removebg-preview.png',
+    // Apple touch icon fallback
+    apple: '/logoig-removebg-preview.png',
   },
-}
-
+};
 export const viewport: Viewport = {
   colorScheme: 'dark',
   themeColor: '#12172B',
