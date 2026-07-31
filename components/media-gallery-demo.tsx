@@ -11,12 +11,12 @@ const CAMPAIGN_MEDIA: GalleryMediaItem[] = [
     href: '/gallery/replay-poster-01.jpg',
   },
   {
-    src: '/gallery/replay-ad-01.jpg',
-    alt: 'REPLAY print advertisement, then-and-now split visual',
-    title: '"Then & Now" Print Ad',
+    src: '/Level up.png',
+    alt: 'Arcade x Senior Citizens print advertisement, childhood games to arcade split visual',
+    title: '"Level Up" Print Ad',
     category: 'AD',
-    href: '/gallery/replay-ad-01.jpg',
-  },
+    href: '/Level up.png',
+},
   {
     src: '/gallery/replay-reel-01.jpg',
     alt: 'Cover still from the REPLAY social reel',

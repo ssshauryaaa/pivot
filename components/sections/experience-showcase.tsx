@@ -57,7 +57,7 @@ export function ExperienceShowcase() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden py-24 sm:py-32" aria-label="The reimagined arcade experience">
+    <section id="accessibility" ref={sectionRef} className="relative overflow-hidden py-24 sm:py-32" aria-label="The reimagined arcade experience">
       <div className="pointer-events-none absolute inset-0 grid-backdrop opacity-20" />
 
       <div className="relative z-10 mx-auto max-w-2xl px-6 text-center">

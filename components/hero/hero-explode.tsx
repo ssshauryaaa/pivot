@@ -128,7 +128,7 @@ export function HeroExplode() {
       }
 
       tl.to('[data-hero-copy]', { opacity: 0, y: -40, ease: EASE, duration: 0.6 }, 0)
-        .to('[data-hero-copy] [data-hero-button]', { opacity: 0, y: -40, ease: EASE, duration: 0.6 }, 0)
+        .to('[data-hero-copy] .group', { opacity: 0, y: -40, ease: EASE, duration: 0.6 }, 0)
         .to('[data-hero-sprites]', { opacity: 0, y: -60, ease: EASE, duration: 0.5 }, 0)
         .to('[data-scroll-cue]', { opacity: 0, ease: EASE, duration: 0.3 }, 0)
         .from(

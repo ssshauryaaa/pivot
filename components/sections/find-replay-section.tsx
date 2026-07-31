@@ -3,7 +3,7 @@ import { FindReplayBackdrop } from '@/components/sections/find-replay-backdrop'
 
 export function FindReplaySection() {
   return (
-    <section className="relative overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+    <section id="visit" className="relative overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <FindReplayBackdrop />
 
       <div className="relative z-10 mx-auto max-w-2xl px-2 text-center sm:px-0">

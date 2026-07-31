@@ -167,7 +167,7 @@ export function CabinetSurfer({ games = GAMES, variant = 'magnetic', vhPerItem =
   return (
     // This element's HEIGHT is the only scroll distance the surfer consumes —
     // once you scroll past it, the page continues normally into whatever comes next.
-    <div ref={container} className="relative w-full" style={{ height: `${Math.max(100, games.length * vhPerItem * 100)}vh` }}>
+    <div id="lineup" ref={container} className="relative w-full" style={{ height: `${Math.max(100, games.length * vhPerItem * 100)}vh` }}>
       <div
         className="sticky top-0 flex h-[100svh] w-full items-center justify-center overflow-hidden sm:h-screen"
         onMouseMove={handleMouseMove}

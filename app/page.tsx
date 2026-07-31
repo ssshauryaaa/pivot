@@ -5,7 +5,7 @@ import { ThenNowStickyStack } from '@/components/sections/then-now'
 import { Testimonials } from '@/components/sections/testimonials'
 import { ExperienceShowcase } from '@/components/sections/experience-showcase'
 import { CabinetSurfer } from '@/components/sections/showcase2'
-import { VisitReplay } from '@/components/sections/visit-replay'
+import { SiteFooter } from '@/components/sections/site-footer'
 import { GalleryDemo } from '@/components/media-gallery-demo'
 import { FindReplaySection } from '@/components/sections/find-replay-section'
 
@@ -22,7 +22,7 @@ export default function Page() {
         <GalleryDemo />
         <FindReplaySection />
         <Testimonials />
-        <VisitReplay />
+        <SiteFooter />
       </main>
     </>
   )
