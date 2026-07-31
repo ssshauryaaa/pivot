@@ -103,7 +103,7 @@ export function Preloader() {
         className="animate-flicker relative flex flex-col items-center gap-6 px-6 text-center"
       >
         <p className="font-display text-[11px] leading-relaxed tracking-widest text-primary md:text-sm">
-          REPLAY ARCADE
+           ARCADE
         </p>
 
         <div style={{ perspective: '600px' }}>

@@ -6,9 +6,9 @@ import { WhyReplay } from '@/components/sections/why-replay'
 import { Testimonials } from '@/components/sections/testimonials'
 import { HighScores } from '@/components/sections/high-scores'
 import { ExperienceShowcase } from '@/components/sections/experience-showcase'
-import { CabinetShowcase } from '@/components/sections/showcase'
 import { CabinetSurfer } from '@/components/sections/showcase2'
 import { VisitReplay } from '@/components/sections/visit-replay'
+import { GalleryDemo } from '@/components/media-gallery-demo'
 
 export default function Page() {
   return (
@@ -19,9 +19,8 @@ export default function Page() {
         <HeroExplode />
         <ThenNowStickyStack />
         <ExperienceShowcase />
-        {/* <CabinetShowcase /> */}
         <CabinetSurfer />
-        <WhyReplay />
+        <GalleryDemo />
         <Testimonials />
         <HighScores />
         <VisitReplay />

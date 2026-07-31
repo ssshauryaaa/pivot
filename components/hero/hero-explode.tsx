@@ -128,6 +128,7 @@ export function HeroExplode() {
       }
 
       tl.to('[data-hero-copy]', { opacity: 0, y: -40, ease: EASE, duration: 0.6 }, 0)
+        .to('[data-hero-copy] [data-hero-button]', { opacity: 0, y: -40, ease: EASE, duration: 0.6 }, 0)
         .to('[data-hero-sprites]', { opacity: 0, y: -60, ease: EASE, duration: 0.5 }, 0)
         .to('[data-scroll-cue]', { opacity: 0, ease: EASE, duration: 0.3 }, 0)
         .from(
@@ -169,13 +170,13 @@ export function HeroExplode() {
           <PixelSprites />
         </div>
 
-        <div className="relative z-10 flex flex-1 items-end px-4 pb-24 pt-24 sm:px-8 sm:pb-28 sm:pt-28 lg:items-center lg:px-10 lg:pb-0 lg:pt-0">
-          <div data-hero-copy className="will-animate w-full max-w-full sm:max-w-xl">
+        <div data-hero-copy className="relative z-10 flex flex-1 flex-col justify-center px-4 py-10 sm:px-8 sm:py-14 lg:items-start lg:px-10">
+          <div className="will-animate w-full max-w-full sm:max-w-xl">
             <p
               data-hero-reveal
               className="font-display text-[10px] tracking-[0.2em] text-primary sm:text-xs"
             >
-              REPLAY ARCADE — EST. 1979, REOPENED FOR YOU
+               ARCADE — EST. 1979, REOPENED FOR YOU
             </p>
             <h1
               data-hero-reveal
@@ -186,29 +187,25 @@ export function HeroExplode() {
               <br />
               <span className="text-primary">{HEADLINES[headlineIndex].line2}</span>
             </h1>
-            <p data-hero-reveal className="mt-6 max-w-full text-pretty leading-relaxed text-muted-foreground sm:max-w-md">
-              You didn&apos;t discover arcades. You built them — quarter by quarter, Friday by Friday.
-              REPLAY is the room you left, wired for the people who never actually stopped playing.
-            </p>
-            <div data-hero-reveal className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
-  <a
-    href="#visit"
-    className="group inline-flex items-center justify-center gap-2 bg-primary px-6 py-3 font-display text-[11px] tracking-wide text-primary-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(255,182,39,0.35)] sm:justify-start sm:text-xs"
-  >
-    CLAIM YOUR TOKENS
-  </a>
+          </div>
 
-  <a
-    href="/contact"
-    className="inline-flex items-center justify-center gap-2 border border-primary/45 px-6 py-3 font-display text-[11px] tracking-wide text-primary transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 sm:justify-start sm:text-xs"
-  >
-    CONTACT US
-  </a>
-</div>
+          <div data-hero-button className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <a
+              href="#visit"
+              className="group inline-flex items-center justify-center gap-2 bg-primary px-6 py-3 font-display text-[11px] tracking-wide text-primary-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(255,182,39,0.35)] sm:justify-start sm:text-xs"
+            >
+              CLAIM YOUR TOKENS
+            </a>
+            <a
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 border border-primary/45 px-6 py-3 font-display text-[11px] tracking-wide text-primary transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 sm:justify-start sm:text-xs"
+            >
+              CONTACT US
+            </a>
           </div>
         </div>
 
-        <ul className="pointer-events-none absolute bottom-24 left-4 right-4 z-10 flex flex-col gap-4 sm:left-8 sm:right-8 sm:gap-5 lg:bottom-auto lg:top-1/2 lg:left-6 lg:right-auto lg:-translate-y-1/2 lg:gap-8">
+        <ul className="pointer-events-none relative z-10 mt-6 flex flex-col gap-4 px-4 pb-8 sm:absolute sm:bottom-24 sm:left-8 sm:right-8 sm:mt-0 sm:px-0 sm:pb-0 sm:gap-5 lg:bottom-auto lg:top-1/2 lg:left-6 lg:right-auto lg:-translate-y-1/2 lg:gap-8">
           {CALLOUTS.map((callout, i) => (
             <li key={callout.id} className="callout-label will-animate max-w-full sm:max-w-88 lg:max-w-88">
               <div className="flex items-baseline gap-3">

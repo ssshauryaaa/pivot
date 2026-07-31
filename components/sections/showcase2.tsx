@@ -11,6 +11,7 @@ import {
   useMotionValueEvent,
   type MotionValue,
 } from 'framer-motion'
+import { ArrowDown, ArrowUp } from 'lucide-react'
 import { useRef, useState, useCallback, useEffect } from 'react'
 
 // How many cards to keep mounted on either side of the current scroll
@@ -152,10 +153,11 @@ export function CabinetSurfer({ games = GAMES, variant = 'magnetic', vhPerItem =
     setCurrentIndex((prev) => (prev === idx ? prev : idx))
   })
 
-  const handleSkip = useCallback(() => {
+  const handleSkip = useCallback((direction: 'up' | 'down') => {
     if (!container.current) return
-    const targetY = container.current.offsetTop + container.current.offsetHeight
-    window.scrollTo({ top: targetY, behavior: 'smooth' })
+
+    const scrollAmount = direction === 'down' ? container.current.offsetHeight : -container.current.offsetHeight
+    window.scrollBy({ top: scrollAmount, behavior: 'smooth' })
   }, [])
 
   if (reduceMotion) {
@@ -175,24 +177,34 @@ export function CabinetSurfer({ games = GAMES, variant = 'magnetic', vhPerItem =
         <div className="grid-backdrop absolute -inset-24 opacity-30" aria-hidden="true" />
 
         <div className="absolute inset-x-0 top-0 z-50 flex flex-col gap-4 px-[4vw] pt-[4vw] sm:flex-row sm:items-start sm:justify-between">
-          <div className="pointer-events-none max-w-[min(90vw,34rem)]">
-            <p className="font-display text-xs tracking-[0.22em] text-primary">the lineup</p>
-            <h1 className="font-display mt-2 text-[clamp(1.7rem,6vw,3.5rem)] font-bold leading-[0.95] tracking-tight text-foreground">
-              Every cabinet,
-              <br />
-              ready when you are
-            </h1>
+            <div className="pointer-events-none max-w-[min(90vw,34rem)]">
+              <p className="font-display text-xs tracking-[0.22em] text-primary">the lineup</p>
+              <h1 className="font-display mt-2 text-[clamp(1.7rem,6vw,3.5rem)] font-bold leading-[0.95] tracking-tight text-foreground">
+                Every cabinet,
+                <br />
+                ready when you are
+              </h1>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => handleSkip('up')}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/40 bg-background/80 text-foreground backdrop-blur transition hover:border-primary hover:bg-background"
+                aria-label="Scroll up"
+              >
+                <ArrowUp className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSkip('down')}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/40 bg-background/80 text-foreground backdrop-blur transition hover:border-primary hover:bg-background"
+                aria-label="Scroll down"
+              >
+                <ArrowDown className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
           </div>
-
-          <button
-            type="button"
-            onClick={handleSkip}
-            className="w-fit rounded-full border border-primary/40 bg-background/80 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground backdrop-blur transition hover:border-primary hover:bg-background"
-          >
-            skip
-          </button>
-        </div>
-
         <p className="font-display absolute bottom-[4vw] left-[4vw] z-50 text-[10px] tracking-[0.2em] text-foreground/50 sm:right-[4vw] sm:left-auto">
           scroll to surf
         </p>
