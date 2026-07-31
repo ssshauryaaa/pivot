@@ -295,6 +295,8 @@ function GalleryCard({
         {item.href && (
           <a
             href={item.href}
+            target="_blank"
+            rel="noreferrer"
             className="font-display mt-3 inline-flex w-fit items-center gap-2 border border-primary/45 px-4 py-2 text-[10px] tracking-wide text-primary transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10"
             tabIndex={isActive ? 0 : -1}
           >
