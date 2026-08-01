@@ -25,7 +25,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: 'Margaret H.',
     age: '71',
     quote:
-      '"First time back in an arcade since 1978. Still remember which corner the Galaga machine used to sit in."',
+      '"I grew up in a neighborhood arcade, and this place brought all of that right back. The sound, the smell, even the ticket counter made me grin."',
     image:
       'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=1200&auto=format&fit=crop',
     className: 'absolute top-4 left-[4%] rotate-[-6deg]',
@@ -34,7 +34,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: 'Robert C.',
     age: '68',
     quote:
-      '"My grandson finally lost to me at something. Worth the trip alone."',
+      '"I came with my grandson to show him the old games. He ended up wanting to stay for another hour after I beat him at Centipede."',
     image:
       'https://images.unsplash.com/photo-1583468982228-19f19164aee2?q=80&w=1200&auto=format&fit=crop',
     className: 'absolute top-36 left-[20%] rotate-[5deg]',
@@ -43,7 +43,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: 'Diane P.',
     age: '74',
     quote:
-      '"The seated pinball setup meant I could actually play for an hour without my back complaining."',
+      '"I haven\'t played pinball since my kids were little. The chairs were comfy and I actually played through three games without stopping."',
     image:
       'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=1200&auto=format&fit=crop',
     className: 'absolute top-2 left-[38%] rotate-[3deg]',
@@ -52,7 +52,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: 'Walter B.',
     age: '77',
     quote:
-      '"Senior Hour is the quietest, best-lit arcade I have ever stepped into. No shame in that."',
+      '"Senior Hour is exactly what it says: good light, quieter machines, and staff who know when to check in and when to leave you alone."',
     image:
       'https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?q=80&w=1200&auto=format&fit=crop',
     className: 'absolute top-40 left-[54%] rotate-[-4deg]',
@@ -61,7 +61,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: 'Evelyn S.',
     age: '69',
     quote:
-      '"Skee-ball again after forty years. My wrist remembered before my brain did."',
+      '"I used to bowl on the weekends. This felt like that, only with neon and skee-ball. I laughed more than I expected to."',
     image:
       'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop',
     className: 'absolute top-8 left-[68%] rotate-[6deg]',
@@ -70,7 +70,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: 'Harold T.',
     age: '80',
     quote:
-      '"The staff didn\'t treat me like I was fragile. Just another player waiting for the machine."',
+      '"Nobody treated me like a problem. Just another player trying to hit the high score. That meant a lot."',
     image:
       'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1200&auto=format&fit=crop',
     className: 'absolute top-44 left-[80%] rotate-[-3deg]',
@@ -79,7 +79,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: 'Patricia L.',
     age: '72',
     quote:
-      '"Brought my bridge club. We stayed three hours and none of us noticed the time."',
+      '"I brought the bridge group for a Tuesday afternoon. We stayed longer than planned and still had energy to grab pizza after."',
     image:
       'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200&auto=format&fit=crop',
     className: 'absolute top-16 left-[12%] rotate-[4deg]',
@@ -88,7 +88,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: 'Gerald M.',
     age: '75',
     quote:
-      '"Pac-Man tournament, senior bracket. I placed second and I am not letting it go."',
+      '"There was a Pac-Man bracket on Saturday. I got second place and I already told the guy I\'m coming back to take first."',
     image:
       'https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=1200&auto=format&fit=crop',
     className: 'absolute top-52 left-[42%] rotate-[7deg]',

@@ -35,6 +35,8 @@ export interface GalleryMediaItem {
   category: string
   href?: string
   ctaLabel?: string
+  mediaType?: 'image' | 'video'
+  poster?: string
 }
 
 const MAX_POINTER_TILT = 5 // degrees — subtler than the hero cards, this is a gallery not a hero
@@ -154,17 +156,6 @@ export function MediaGalleryCarousel({
       <div className="relative z-20 mt-8 flex items-center justify-center gap-4">
         <NavButton direction="previous" onClick={goPrev} />
 
-        {autoPlay && (
-          <button
-            type="button"
-            onClick={() => setPlaying((p) => !p)}
-            aria-label={playing ? 'Pause automatic slideshow' : 'Play automatic slideshow'}
-            aria-pressed={playing}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/45 text-primary transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10"
-          >
-            {playing ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
-          </button>
-        )}
 
         <NavButton direction="next" onClick={goNext} />
       </div>
@@ -211,6 +202,7 @@ function GalleryCard({
   reduceMotion: boolean
 }) {
   const cardRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const isActive = index === current
 
   // signed distance from active slide, wrapped for a short carousel
@@ -220,6 +212,46 @@ function GalleryCard({
 
   const rotateX = useSpring(useMotionValue(0), { stiffness: 220, damping: 22 })
   const rotateY = useSpring(useMotionValue(0), { stiffness: 220, damping: 22 })
+
+  useEffect(() => {
+    if (item.mediaType !== 'video') return
+    const video = videoRef.current
+    if (!video) return
+
+    let canceled = false
+    const setLastFrame = () => {
+      if (canceled || !video.duration || Number.isNaN(video.duration) || !isFinite(video.duration)) return
+      const targetTime = Math.max(video.duration - 0.05, 0)
+      const handleSeeked = () => {
+        video.pause()
+        video.removeEventListener('seeked', handleSeeked)
+      }
+
+      if (Math.abs(video.currentTime - targetTime) > 0.01) {
+        video.addEventListener('seeked', handleSeeked)
+        video.currentTime = targetTime
+      } else {
+        video.pause()
+      }
+    }
+
+    const onLoadedMetadata = () => setLastFrame()
+
+    if (isActive) {
+      if (video.readyState >= 1) {
+        setLastFrame()
+      } else {
+        video.addEventListener('loadedmetadata', onLoadedMetadata, { once: true })
+      }
+    } else {
+      video.pause()
+    }
+
+    return () => {
+      canceled = true
+      video.removeEventListener('loadedmetadata', onLoadedMetadata)
+    }
+  }, [isActive, item.mediaType, item.src])
 
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (reduceMotion || !isActive) return
@@ -278,12 +310,25 @@ function GalleryCard({
       {isActive && <span className="tilt-glare pointer-events-none absolute inset-0" aria-hidden="true" />}
 
       <div className="scanlines relative h-[62%] w-full overflow-hidden">
-        <img
-          src={item.src}
-          alt={item.alt}
-          className="h-full w-full object-cover"
-          loading={isActive ? 'eager' : 'lazy'}
-        />
+        {item.mediaType === 'video' || item.src.toLowerCase().endsWith('.mp4') ? (
+          <video
+            ref={videoRef}
+            src={item.src}
+            poster={item.poster}
+            className="h-full w-full object-cover"
+            muted
+            playsInline
+            preload="metadata"
+            controls={false}
+          />
+        ) : (
+          <img
+            src={item.src}
+            alt={item.alt}
+            className="h-full w-full object-cover"
+            loading={isActive ? 'eager' : 'lazy'}
+          />
+        )}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
         <span className="font-display absolute left-3 top-3 rounded-sm bg-void/70 px-2 py-1 text-[10px] tracking-[0.2em] text-accent">
           {item.category}

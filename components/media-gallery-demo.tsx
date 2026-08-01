@@ -30,14 +30,16 @@ const CAMPAIGN_MEDIA: GalleryMediaItem[] = [
     title: '"PLAYER 1" Poster',
     category: 'AD',
     href: '/PLAYER 1.png',
-},
+  },
   {
-    src: '/gallery/replay-reel-01.jpg',
-    alt: 'Cover still from the REPLAY social reel',
-    title: 'Instagram Reel',
-    category: 'REEL',
-    href: '/gallery/replay-reel-01.mp4',
-    ctaLabel: 'WATCH REEL',
+    src: '/VIDEO-2026-08-01-01-38-01.mp4',
+    poster: '/p2 (2).jpeg',
+    alt: 'REPLAY campaign video teaser',
+    title: 'Campaign Teaser',
+    category: 'VIDEO',
+    href: '/VIDEO-2026-08-01-01-38-01.mp4',
+    ctaLabel: 'WATCH VIDEO',
+    mediaType: 'video',
   },
 ]
 
